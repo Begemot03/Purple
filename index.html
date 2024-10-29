@@ -5,36 +5,43 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
 	<meta charset="UTF-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge;"/>
+	<link rel="stylesheet" href="./styles/font/bootstrap-icons.css">
 	<link rel="stylesheet" href="./styles/style.css">
 </head>
 <body>
-	<header class="header">
-		<div class="container header__container">
-			<span class="brand">Purple</span>
-			<nav class="nav">
-				<a class="nav__item" href="#">Знакомства</a>
-				<a class="nav__item" href="#">Поиск</a>
-				<a class="nav__item" href="#">События</a>
-				<a class="nav__item" href="#">Сообщения</a>
-			</nav>
-		</div>
-	</header>
-	<section>
-		<div class="container">
-			<div class="card">
-				<div class="card__header">
-					<img class="card__header-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqGK3diR3Zi-mnOXEaj-3ewmFyRYVxGzVzZw&s"></img>
-					<div class="card__header-title">Кот, 24 года</div>
-					<div class="card__header-subtitle">Из Казани, 500м от вас</div>
-				</div>
-				<div class="card__content">Куплю пиво, сделаешь минет</div>
-				<div class="card__action">
-					<div class="btn">Дизлайк</div>
-					<div class="btn">Лайк</div>
-				</div>
+	<div class="layout">
+		<div class="layout__header">
+			<div class="btn-icon to-scaleup nav__toggler">
+				<i class="bi bi-list nav__toggler-open"></i>
+				<i class="bi bi-x-lg nav__toggler-close"></i>
 			</div>
 		</div>
-	</section>
+		<div class="layout__sidebar">
+			<nav class="nav nav-column">
+				<a href="#" class="nav__item">Профиль</a>
+				<a href="#" class="nav__item">Знакомства</a>
+				<a href="#" class="nav__item">Сообщения</a>
+				<a href="#" class="nav__item">Настройки</a>
+			</nav>
+		</div>
+		<div class="layout__content">
+			<div class="card-fullscreen">
+				<img class="card-fullscreen__img" src="https://masterpiecer-images.s3.yandex.net/5f8eca87ec12432:upscaled">
+				<div class="card-fullscreen__content">
+					<div class="card-fullscreen__desctiption">
+						<div class="card-fullscreen__title">Кот, 24 года</div>
+						<div class="card-fullscreen__subtitle">Из Казани, 500м от вас</div>
+					</div>
+					<div class="card-fullscreen__action">
+						<div class="btn-icon to-scaleup dislike"><i class="bi bi-x-lg"></i></div>
+						<div class="btn-icon to-scaleup like"><i class="bi bi-heart"></i></i></div>
+					</div>
+				</div>
+				
+			</div>
+			
+		</div>
+	</div>
 	<script src="./src/main.js"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
+
 :root {
     --container-width: 1200px;
 
@@ -58,6 +59,69 @@ a:hover {
     display: flex;
 }
 
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.fullscreen-bg-img {
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.fullscreen {
+    height: 100%;
+    width: 100%;
+}
+
+.img-cover {
+    height: 100%;
+    object-fit: contain;
+}
+
+[class*=to-] {
+    transition: all var(--animation-duration) ease-in-out;
+}
+
+.to-top:hover {
+    transform: translateY(-1rem);
+}
+
+.to-bottom:hover {
+    transform: translateY(1rem);
+}
+
+.to-scaleup:hover {
+    transform: scale(1.1);
+}
+
+/* Layouts */
+
+/* Main Layout */
+.layout {
+    background: rgb(57,19,62);
+    background: linear-gradient(350deg, rgba(57,19,62,1) 0%, rgba(19,0,22,1) 100%); 
+    overflow-y: hidden;
+    width: 100%;
+    max-height: 100vh;
+    position: relative;
+}
+
+.layout__header {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+}
+
+.layout__content {
+    width: fit-content;
+    margin-inline: auto;
+}
+
+.layout__sidebar {
+    position: absolute;
+    left: 0;
+    bottom: 50%;
+}
 
 /* Component */
 
@@ -78,11 +142,40 @@ a:hover {
 .nav {
     display: flex;
     align-items: center;
-    gap: var(--sz-sm);
+    gap: 1rem;
+}
+
+.nav-column {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 2rem;
+
 }
 
 .nav__item {
+    color: #fff;
+}
 
+.nav__item:hover {
+    color: #999;
+}
+
+.nav__toggler-close, .nav-isopen > .nav__toggler-open {
+    display: none;
+}
+
+.nav__toggler-open, .nav-isopen > .nav__toggler-close {
+    display: block;
+}
+
+.nav.nav-column {
+    transform: translate(-5000px);
+    transition: all var(--animation-duration) ease-in-out;
+}
+
+.nav.nav-column.nav-isopen {
+    transform: translate(0px);
 }
 
 /* Brand */
@@ -159,4 +252,69 @@ a:hover {
 
 .btn:hover {
     background-color: var(--btn-hover-clr);
+}
+
+.btn-icon {
+    padding: var(--sz-md);
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    width: 6rem;
+    height: 6rem;
+    position: relative;
+    cursor: pointer;
+}
+
+.btn-icon > i {
+    position: absolute;
+    font-size: 3rem;
+    line-height: 3rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+} 
+
+/* Fullscreen Card */
+.card-fullscreen {
+    position: relative;
+}
+
+.card-fullscreen__img {
+    object-fit: cover;
+    opacity: 0.4;
+    height: 100vh;
+}
+
+.card-fullscreen__content {
+    position: absolute;
+    bottom: 0rem;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgb(0,0,0);
+    background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%); 
+}
+
+.card-fullscreen__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding-bottom: 0.75rem;
+}
+
+.card-fullscreen__subtitle, .card-fullscreen__title {
+    color: #fff;
+}
+
+.card-fullscreen__subtitle {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.card-fullscreen__action {
+    display: flex;
+    gap: 1rem;
 }
