@@ -27,3 +27,33 @@ function nextAnketa() {
     anketaImg.setAttribute("src", newAnketa);
     ankets.push(newAnketa);
 }
+
+const card = document.querySelector(".mouse-pressed__effect");
+
+const size = {
+    w: 0,
+    h: 0,
+};
+
+window.addEventListener("load", () => {
+    size.w = card.offsetWidth;
+    size.h = card.offsetHeight;
+});
+
+card.addEventListener("mousemove", (e) => {
+    const rect = card.getBoundingClientRect();
+
+    const oX = e.clientX - rect.left;
+    const oY = e.clientY - rect.top;
+
+    const rotateX = (oY / size.h - 0.5) * 10;
+    const rotateY = -(oX / size.w - 0.5) * 10;
+
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+});
+
+// Сбрасываем трансформацию при выходе курсора за пределы карточки
+card.addEventListener("mouseleave", () => {
+    card.style.transform = "rotateX(0) rotateY(0)";
+});
+

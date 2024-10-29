@@ -78,6 +78,8 @@ a:hover {
     object-fit: contain;
 }
 
+
+/* Animation */
 [class*=to-] {
     transition: all var(--animation-duration) ease-in-out;
 }
@@ -92,6 +94,23 @@ a:hover {
 
 .to-scaleup:hover {
     transform: scale(1.1);
+}
+
+.to-fill:hover {
+    background-color: #fff;
+    color: rgba(19,0,22,1);
+    
+}
+
+/* 3D */
+.perspective {
+    perspective: 1500px;
+    transform-style: preserve-3d;
+    transition: transform var(--animation-duration) ease-in-out
+}
+
+/* 3D Animations */
+.mouse-pressed__effect {
 }
 
 /* Layouts */
@@ -154,8 +173,23 @@ a:hover {
 }
 
 .nav__item {
+    position: relative;
     color: #fff;
 }
+
+.nav__item>i {
+    position: absolute;
+    top: 50%;
+    left: -1rem;
+    transform: translate(-50%, -50%);
+    visibility: hidden;
+    transition: all var(--animation-duration) ease-in-out;
+}
+
+.nav__item:hover>i {
+    visibility: visible;
+}
+
 
 .nav__item:hover {
     color: #999;
@@ -177,6 +211,7 @@ a:hover {
 .nav.nav-column.nav-isopen {
     transform: translate(0px);
 }
+
 
 /* Brand */
 .brand {
@@ -275,14 +310,25 @@ a:hover {
     transform: translate(-50%, -50%);
 } 
 
+.like i {
+    transition: all var(--animation-duration) ease-in-out;
+}
+
+.like:hover i {
+    color: #E52B50;
+}
+
 /* Fullscreen Card */
 .card-fullscreen {
     position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    border: 1px solid #aaaaaa98;
 }
 
 .card-fullscreen__img {
     object-fit: cover;
-    opacity: 0.4;
+    opacity: 0.8;
     height: 100vh;
 }
 
@@ -318,3 +364,4 @@ a:hover {
     display: flex;
     gap: 1rem;
 }
+
