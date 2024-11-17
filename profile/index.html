@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html id="page">
+<head>
+	<title>Purple - Профиль</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge;"/>
+	<link rel="stylesheet" href="../styles/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+    <div class="layout">
+        <div class="layout__header">
+            <div class="btn-icon to-fill nav__toggler">
+                <i class="bi bi-list nav__toggler-open"></i>
+                <i class="bi bi-x-lg nav__toggler-close"></i>
+            </div>
+        </div>
+        <div class="layout__sidebar">
+            <nav class="nav nav-column">
+                <a href="./index.html" class="nav__item"><i class="bi bi-arrow-right-short"></i>Профиль</a>
+                <a href="../index.html" class="nav__item"><i class="bi bi-arrow-right-short"></i>Знакомства</a>
+                <a href="../contact/" class="nav__item"><i class="bi bi-arrow-right-short"></i>Сообщения</a>
+                <a href="../people/index.html" class="nav__item"><i class="bi bi-arrow-right-short"></i>Люди</a>
+            </nav>
+        </div>
+        <div class="layout__content">
+            <div class="fullscreen auto-center">
+                <div class="profile">
+                    <div class="profile__avatar">
+                        <div>
+                            <img src="https://placehold.jp/250x400.png" alt="Аватар" class="profile__avatar-img">
+                            <button class="btn btn-transp profile__avatar-edit">Изменить</button>
+                        </div>
+                    </div>
+                    <div class="profile__info">
+                        <form action="#" class="profile__form">
+                            <div class="profile__field">
+                                <label for="name" class="profile__label">Имя</label>
+                                <input type="text" id="name" class="profile__input" value="Иван">
+                            </div>
+                            <div class="profile__field">
+                                <label for="surname" class="profile__label">Фамилия</label>
+                                <input type="text" id="surname" class="profile__input" value="Иванов">
+                            </div>
+                            <div class="profile__field">
+                                <label for="age" class="profile__label">Возраст</label>
+                                <input type="number" id="age" class="profile__input" value="25">
+                            </div>
+                            <div class="profile__field">
+                                <label for="gender" class="profile__label">Пол</label>
+                                <select id="gender" class="profile__input">
+                                    <option value="male" selected>Мужской</option>
+                                    <option value="female">Женский</option>
+                                </select>
+                            </div>
+                            <div class="profile__field">
+                                <label for="about" class="profile__label">О себе</label>
+                                <textarea id="about" class="profile__input" rows="4">Люблю спорт, книги и путешествия.</textarea>
+                            </div>
+                            <div class="profile__field">
+                                <label for="interests" class="profile__label">Интересы</label>
+                                <input type="text" id="interests" class="profile__input" value="Бег, рыбалка, кулинария">
+                            </div>
+                            <div class="profile__actions">
+                                <button type="submit" class="btn btn-transp profile__save">Сохранить</button>
+                                <button type="button" class="btn btn-transp profile__cancel">Отмена</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../src/main.js"></script>
+</body>
+</html>
