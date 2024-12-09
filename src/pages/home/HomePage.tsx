@@ -1,32 +1,41 @@
-import { FC } from "react";
+import { FC, useState } from "react";
+import { Card } from "./ui";
 
 export const HomePage: FC = () => {
+	const profiles = [
+		{
+			imageSrc:
+				"https://masterpiecer-images.s3.yandex.net/5f8eca87ec12432:upscaled",
+			title: "Кот, 24 года",
+			subtitle: "Из Казани, 500м от вас",
+		},
+		{
+			imageSrc:
+				"https://masterpiecer-images.s3.yandex.net/5f8eca87ec12432:upscaled",
+			title: "Кошка, 22 года",
+			subtitle: "Из Москвы, 1км от вас",
+		},
+	];
+
+	const [currentProfile, setCurrentProfile] = useState<number>(0);
+
+	const nextProfile = () => {
+		setCurrentProfile((prev) => (prev + 1) % profiles.length);
+	};
+
+	const handleDislike = () => {
+		nextProfile();
+	};
+
+	const handleLike = () => {
+		nextProfile();
+	};
+
 	return (
-		<div className="card-fullscreen mouse-pressed__effect">
-			<div className="card-fullscreen__wrapper">
-				<img
-					className="card-fullscreen__img"
-					src="https://masterpiecer-images.s3.yandex.net/5f8eca87ec12432:upscaled"
-				/>
-				<div className="card-fullscreen__content">
-					<div className="card-fullscreen__desctiption">
-						<div className="card-fullscreen__title">
-							Кот, 24 года
-						</div>
-						<div className="card-fullscreen__subtitle">
-							Из Казани, 500м от вас
-						</div>
-					</div>
-					<div className="card-fullscreen__action">
-						<div className="btn-icon to-scaleup dislike">
-							<i className="bi bi-x-lg"></i>
-						</div>
-						<div className="btn-icon to-scaleup like">
-							<i className="bi bi-heart-fill"></i>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		<Card
+			{...profiles[currentProfile]}
+			onDislike={handleDislike}
+			onLike={handleLike}
+		/>
 	);
 };
