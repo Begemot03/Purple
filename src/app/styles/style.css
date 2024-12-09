@@ -15,8 +15,6 @@
     --sz-md: 1rem;
     --sz-lg: 1.5rem;
 
-    
-
     --brand-sz: 2rem;
 
     --card-border: 1px solid #bfc3c9;
@@ -565,24 +563,24 @@ input:focus {
     max-width: 500px;
 }
 
-.profile__form {
+.form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.profile__field {
+.field {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-.profile__label {
+.label {
     color: #fff;
     font-weight: 500;
 }
 
-.profile__input {
+.input {
     padding: 0.8rem;
     border: 1px solid #fff;
     border-radius: 0.3rem;
@@ -590,11 +588,11 @@ input:focus {
     color: #fff;
 }
 
-.profile__input:focus {
+.input:focus {
     border-color: #999 !important;
 }
 
-.profile__actions {
+.form__actions {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
