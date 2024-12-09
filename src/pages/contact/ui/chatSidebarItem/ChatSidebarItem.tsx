@@ -5,15 +5,17 @@ interface ChatSidebarItemProps {
 	avatarSrc: string;
 	title: string;
 	subtitle: string;
+	onClick: () => void;
 }
 
 export const ChatSidebarItem: FC<ChatSidebarItemProps> = ({
 	avatarSrc,
 	title,
 	subtitle,
+	onClick,
 }) => {
 	return (
-		<div className="chat__sidebar-item">
+		<div onClick={onClick} className="chat__sidebar-item">
 			<Avatar src={avatarSrc} />
 			<div className="chat__sidebar-item__content">
 				<div className="chat__sidebar-item__title">{title}</div>

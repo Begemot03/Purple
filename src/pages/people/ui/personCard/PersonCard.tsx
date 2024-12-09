@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useChatStore } from "@/entities/chat";
 
 interface PersonCardProps {
 	avatar: string;
@@ -7,6 +8,7 @@ interface PersonCardProps {
 	age: number;
 	gender: string;
 	interests: string;
+	id: string;
 }
 
 export const PersonCard: FC<PersonCardProps> = ({
@@ -16,13 +18,20 @@ export const PersonCard: FC<PersonCardProps> = ({
 	age,
 	gender,
 	interests,
+	id,
 }) => {
+	const { addChat } = useChatStore();
+
+	const handleLikeClick = () => {
+		addChat(id);
+	};
+
 	return (
 		<div className="people-list__item">
 			<div className="people-list__item-img__wrapper">
 				<img src={avatar} alt={`Аватар ${name}`} />
 				<div className="like-overlay">
-					<button className="like-button">
+					<button className="like-button" onClick={handleLikeClick}>
 						<i className="bi bi-heart"></i>
 					</button>
 				</div>

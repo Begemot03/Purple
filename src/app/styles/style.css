@@ -448,6 +448,7 @@ input:focus {
 	justify-content: stretch;
 	flex-direction: column;
 	gap: 0.5rem;
+	min-width: 250px;
 }
 
 .chat__sidebar-item {
@@ -494,6 +495,7 @@ input:focus {
 	display: flex;
 	flex-direction: column;
 	gap: var(--sz-md);
+	min-width: 450px;
 }
 
 .chat__message {
@@ -760,4 +762,8 @@ input:focus {
 .not-found__btn:hover {
 	background-color: white;
 	color: black;
+}
+
+.no-chat-selected {
+	color: white;
 }

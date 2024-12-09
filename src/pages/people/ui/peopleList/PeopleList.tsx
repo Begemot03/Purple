@@ -1,17 +1,9 @@
 import { FC } from "react";
 import { PersonCard } from "../";
-
-interface Person {
-	avatar: string;
-	name: string;
-	surname: string;
-	age: number;
-	gender: string;
-	interests: string;
-}
+import { Profile } from "@/entities/profile/model";
 
 interface PeopleListProps {
-	people: Person[];
+	people: Profile[];
 }
 
 export const PeopleList: FC<PeopleListProps> = ({ people }) => {
@@ -26,6 +18,7 @@ export const PeopleList: FC<PeopleListProps> = ({ people }) => {
 					age={person.age}
 					gender={person.gender}
 					interests={person.interests}
+					id={person.id}
 				/>
 			))}
 		</div>

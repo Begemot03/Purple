@@ -1,22 +1,11 @@
 import { FC, useState } from "react";
 import { Card } from "./ui";
+import { useProfilesStore } from "@/entities/profile";
+import { useChatStore } from "@/entities/chat";
 
 export const HomePage: FC = () => {
-	const profiles = [
-		{
-			imageSrc:
-				"https://masterpiecer-images.s3.yandex.net/5f8eca87ec12432:upscaled",
-			title: "Кот, 24 года",
-			subtitle: "Из Казани, 500м от вас",
-		},
-		{
-			imageSrc:
-				"https://masterpiecer-images.s3.yandex.net/5f8eca87ec12432:upscaled",
-			title: "Кошка, 22 года",
-			subtitle: "Из Москвы, 1км от вас",
-		},
-	];
-
+	const profiles = useProfilesStore((state) => state.profiles);
+	const addChat = useChatStore((state) => state.addChat);
 	const [currentProfile, setCurrentProfile] = useState<number>(0);
 
 	const nextProfile = () => {
@@ -28,12 +17,19 @@ export const HomePage: FC = () => {
 	};
 
 	const handleLike = () => {
+		const likedProfile = profiles[currentProfile];
+		addChat(likedProfile.id);
 		nextProfile();
 	};
 
+	const { avatar, name, age, interests } = profiles[currentProfile];
+	const title = `${name}, ${age} лет`;
+
 	return (
 		<Card
-			{...profiles[currentProfile]}
+			imageSrc={avatar}
+			title={title}
+			subtitle={interests}
 			onDislike={handleDislike}
 			onLike={handleLike}
 		/>
