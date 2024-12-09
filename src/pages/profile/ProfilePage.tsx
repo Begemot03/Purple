@@ -4,16 +4,60 @@ import { FormActions } from "@/shared/ui/formActions";
 import { LabelInput } from "@/shared/ui/labelInput";
 import { LabelSelect } from "@/shared/ui/labelSelect";
 import { LabelTextarea } from "@/shared/ui/labelTextarea";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
+import { useUserStore } from "@/entities/user";
 
 export const ProfilePage: FC = () => {
+	const { user, updateUserFromForm } = useUserStore();
+
+	const [formData, setFormData] = useState({
+		name: "",
+		surname: "",
+		age: "",
+		gender: "",
+		interests: "",
+		about: "",
+	});
+
+	useEffect(() => {
+		setFormData({
+			name: user.name,
+			surname: user.surname,
+			age: user.age.toString(),
+			gender: user.gender,
+			interests: user.interests,
+			about: user.about,
+		});
+	}, [user]);
+
+	const handleFormSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+
+		updateUserFromForm(new FormData(e.target as HTMLFormElement));
+	};
+
+	const handleInputChange = (
+		e: React.ChangeEvent<
+			HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+		>
+	) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	};
+
 	return (
 		<div className="fullscreen auto-center">
 			<div className="profile">
 				<div className="profile__avatar">
 					<div>
 						<img
-							src="https://placehold.jp/250x400.png"
+							src={
+								user.avatar ||
+								"https://placehold.jp/250x400.png"
+							}
 							alt="Аватар"
 							className="profile__avatar-img"
 						/>
@@ -25,40 +69,46 @@ export const ProfilePage: FC = () => {
 					</div>
 				</div>
 				<div className="profile__info">
-					<Form>
+					<Form onSubmit={handleFormSubmit}>
 						<LabelInput
 							label="Имя"
 							name="name"
-							placeholder="Иван"
+							value={formData.name}
+							onChange={handleInputChange}
 						/>
 						<LabelInput
 							label="Фамилия"
 							name="surname"
-							placeholder="Иванов"
+							value={formData.surname}
+							onChange={handleInputChange}
 						/>
 						<LabelInput
 							label="Возраст"
 							name="age"
-							placeholder="25"
+							value={formData.age}
+							onChange={handleInputChange}
 						/>
 						<LabelSelect
 							label="Пол"
 							name="gender"
+							value={formData.gender}
+							onChange={handleInputChange}
 							options={[
 								{ label: "Мужской", value: "male" },
 								{ label: "Женский", value: "female" },
 							]}
-							defaultValue="Мужской"
 						/>
 						<LabelTextarea
 							label="О себе"
 							name="about"
-							placeholder="Люблю спорт, книги и путешествия."
-						></LabelTextarea>
+							value={formData.about}
+							onChange={handleInputChange}
+						/>
 						<LabelInput
 							label="Интересы"
 							name="interests"
-							placeholder="Бег, рыбалка, кулинария"
+							value={formData.interests}
+							onChange={handleInputChange}
 						/>
 						<FormActions>
 							<Button type="submit" text="Сохранить" />

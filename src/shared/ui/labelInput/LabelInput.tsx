@@ -3,20 +3,28 @@ import { FC } from "react";
 interface LabelInputProps {
 	label: string;
 	name: string;
-    placeholder: string;
+	value: string;
+	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const LabelInput: FC<LabelInputProps> = ({ label, name, placeholder }) => {
+export const LabelInput: FC<LabelInputProps> = ({
+	label,
+	name,
+	value,
+	onChange,
+}) => {
 	return (
 		<div className="field">
 			<label htmlFor={name} className="label">
-				{ label }
+				{label}
 			</label>
 			<input
 				type="text"
 				id={name}
+				name={name}
 				className="input"
-				value={placeholder}
+				value={value}
+				onChange={onChange}
 			/>
 		</div>
 	);
