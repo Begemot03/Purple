@@ -1,0 +1,19 @@
+{
+    "name": "andre/server",
+    "autoload": {
+        "psr-4": {
+            "Andre\\Server\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Petrov Andrey",
+            "email": "petrov.an@roistat.com"
+        }
+    ],
+    "require": {
+        "mikecao/flight": "^3.13",
+        "catfan/medoo": "^2.1",
+        "firebase/php-jwt": "^6.10"
+    }
+}

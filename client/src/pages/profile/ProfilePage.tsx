@@ -6,10 +6,18 @@ import { LabelSelect } from "@/shared/ui/labelSelect";
 import { LabelTextarea } from "@/shared/ui/labelTextarea";
 import { FC, useEffect, useState } from "react";
 import { useUserStore } from "@/entities/user";
+import { api } from "@/shared/lib/api";
+
+const getUser = async () => {
+	return await api<{ user: any }>("user", "GET");
+};
+
+const updateUser = async (updatedData: Record<string, any>) => {
+	return await api("user", "PUT", updatedData);
+};
 
 export const ProfilePage: FC = () => {
-	const { user, updateUserFromForm } = useUserStore();
-
+	const { user, setUser } = useUserStore();
 	const [formData, setFormData] = useState({
 		name: "",
 		surname: "",
@@ -18,22 +26,44 @@ export const ProfilePage: FC = () => {
 		interests: "",
 		about: "",
 	});
+	const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
 	useEffect(() => {
-		setFormData({
-			name: user.name,
-			surname: user.surname,
-			age: user.age.toString(),
-			gender: user.gender,
-			interests: user.interests,
-			about: user.about,
-		});
-	}, [user]);
+		const fetchUser = async () => {
+			try {
+				const response = await getUser();
+				setUser(response.user);
+				setFormData({
+					name: response.user.name,
+					surname: response.user.surname,
+					age: response.user.age.toString(),
+					gender: response.user.gender,
+					interests: response.user.interests,
+					about: response.user.about,
+				});
+			} catch (error) {
+				console.error("Error fetching user:", error);
+			}
+		};
 
-	const handleFormSubmit = (e: React.FormEvent) => {
+		fetchUser();
+	}, [setUser]);
+
+	const handleFormSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		updateUserFromForm(new FormData(e.target as HTMLFormElement));
+		const formData = new FormData(e.target as HTMLFormElement);
+		let object: any = {};
+		formData.forEach((value: any, key: string) => (object[key] = value));
+
+		try {
+			const response = await api<{ user: any }>("user", "PUT", object);
+			setUser(response.user);
+			alert("Profile updated successfully!");
+		} catch (error) {
+			console.error("Error updating profile:", error);
+			alert("Failed to update profile.");
+		}
 	};
 
 	const handleInputChange = (
@@ -55,17 +85,28 @@ export const ProfilePage: FC = () => {
 					<div>
 						<img
 							src={
-								user.avatar ||
+								user?.avatar ||
 								"https://placehold.jp/250x400.png"
 							}
 							alt="Аватар"
 							className="profile__avatar-img"
 						/>
-						<Button
-							type="button"
-							text="Изменить"
-							className="profile__avatar-edit"
-						/>
+						<label className="profile__avatar-edit">
+							<Button
+								type="button"
+								text={
+									isUploadingAvatar
+										? "Загрузка..."
+										: "Изменить"
+								}
+							/>
+							<input
+								type="file"
+								accept="image/*"
+								onChange={handleFormSubmit}
+								style={{ display: "none" }}
+							/>
+						</label>
 					</div>
 				</div>
 				<div className="profile__info">
