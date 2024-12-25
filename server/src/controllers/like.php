@@ -2,44 +2,59 @@
 
 namespace Andre\Server\Controllers;
 
-use Andre\Server\Models\LikesDTO;
 use Flight;
 
 class LikesController {
-    public static function getLikes() {
-        if (empty($_SESSION['user']['id'])) {
-            Flight::json(['msg' => 'Unauthorized'], 401);
+    public static function likeUser() {
+        $currentUserId = UserController::authenticate();
+        $data = Flight::request()->data->getData();
+
+        if (empty($data['liked_user_id'])) {
+            Flight::json(['msg' => 'Liked user ID is required'], 400);
             return;
         }
 
-        $currentUserId = $_SESSION['user']['id'];
         $db = Flight::get('db');
 
-        $likedByMe = $db->select('Likes', [
-            '[>]User' => ['liked_user_id' => 'id']
-        ], [
-            'User.id',
-            'User.name',
-            'User.surname',
-            'User.avatar',
-            'User.about'
-        ], [
-            'Likes.user_id' => $currentUserId
+        $likedUserId = $data['liked_user_id'];
+
+        $isMutual = $db->has('Likes', [
+            'AND' => [
+                'user_id' => $likedUserId,
+                'liked_user_id' => $currentUserId
+            ]
         ]);
 
-        $likedMe = $db->select('Likes', [
+        $db->insert('Likes', [
+            'user_id' => $currentUserId,
+            'liked_user_id' => $likedUserId
+        ]);
+
+        Flight::json([
+            'msg' => 'Like saved',
+            'mutual' => $isMutual
+        ], 200);
+    }
+
+    public static function getLikesReceived() {
+        $currentUserId = UserController::authenticate();
+        $db = Flight::get('db');
+
+        $likedMeUsers = $db->select('Likes', [
             '[>]User' => ['user_id' => 'id']
         ], [
             'User.id',
             'User.name',
             'User.surname',
             'User.avatar',
-            'User.about'
+            'User.about',
+            'User.age',
+            'User.gender',
+            'User.interests'
         ], [
             'Likes.liked_user_id' => $currentUserId
         ]);
 
-        $response = new LikesDTO($likedByMe, $likedMe);
-        Flight::json($response->toArray(), 200);
+        Flight::json(['likedMeUsers' => $likedMeUsers], 200);
     }
 }

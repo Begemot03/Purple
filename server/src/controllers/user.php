@@ -8,7 +8,7 @@ use Flight;
 class UserController {
     private static $secretKey = 'your_secret_key';
 
-    private static function authenticate() {
+    public static function authenticate() {
         $headers = getallheaders();
         if (!isset($headers['Authorization'])) {
             Flight::json(['msg' => 'Unauthorized'], 401);
@@ -26,7 +26,7 @@ class UserController {
     }
 
     public static function getUser() {
-        $currentUserId = self::authenticate(); // Проверяем токен
+        $currentUserId = self::authenticate();
         $db = Flight::get('db');
 
         $user = $db->get('User', '*', ['id' => $currentUserId]);
@@ -72,7 +72,6 @@ class UserController {
             'id' => $currentUserId
         ]);
 
-        // Возвращаем обновлённые данные
         $user = $db->get('User', '*', ['id' => $currentUserId]);
         Flight::json(['msg' => 'Profile updated successfully', 'user' => $user], 200);
     }

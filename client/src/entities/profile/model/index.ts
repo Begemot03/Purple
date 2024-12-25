@@ -1,3 +1,4 @@
+import { api } from "@/shared/lib/api";
 import { create } from "zustand";
 
 export interface Profile {
@@ -13,67 +14,109 @@ export interface Profile {
 
 interface ProfilesStore {
 	profiles: Profile[];
-	setProfiles: (profiles: Profile[]) => void;
-	likeProfile: (id: string) => void;
-	dislikeProfile: (id: string) => void;
+	likedProfiles: Profile[];
+	offset: number;
+	fetchRecommendations: () => Promise<void>;
+	likeProfile: () => Promise<void>;
+	dislikeProfile: () => void;
+	fetchLikedProfiles: () => Promise<void>;
 }
 
-const LOCAL_STORAGE_KEY = "profiles";
+export const useProfilesStore = create<ProfilesStore>((set, get) => ({
+	profiles: [],
+	likedProfiles: [],
+	offset: 0,
 
-const fakeProfiles: Profile[] = [
-	{
-		id: "1",
-		name: "Алексей",
-		surname: "Петров",
-		age: 30,
-		gender: "Мужской",
-		interests: "Фотография, путешествия",
-		avatar: "https://masterpiecer-images.s3.yandex.net/95ab6622809811ee8765261105627a54:upscaled",
-		liked: false,
-	},
-	{
-		id: "2",
-		name: "Мария",
-		surname: "Смирнова",
-		age: 28,
-		gender: "Женский",
-		interests: "Искусство, литература",
-		avatar: "https://masterpiecer-images.s3.yandex.net/3696fc0a43f311eea03136f52626dcc9:upscaled",
-		liked: false,
-	},
-];
+	// Загрузка рекомендаций
+	fetchRecommendations: async () => {
+		const { offset, profiles } = get();
 
-const loadFromLocalStorage = (): Profile[] => {
-	const data = localStorage.getItem(LOCAL_STORAGE_KEY);
-	return data ? JSON.parse(data) : fakeProfiles;
-};
+		if (profiles.length > 0) return;
 
-export const useProfilesStore = create<ProfilesStore>((set) => ({
-	profiles: loadFromLocalStorage(),
-	setProfiles: (profiles) => {
-		localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(profiles));
-		set(() => ({ profiles }));
+		try {
+			const response = await api<{ data: Profile[] }>(
+				`recommend?offset=${offset}&limit=10`,
+				"GET"
+			);
+
+			const newProfiles: Profile[] = response.data.map((user: any) => ({
+				id: user.id,
+				name: user.name,
+				surname: user.surname,
+				age: user.age,
+				gender: user.gender,
+				interests: user.interests,
+				avatar: user.avatar || "",
+				liked: false,
+			}));
+
+			set((state) => ({
+				profiles: [...state.profiles, ...newProfiles],
+				offset: state.offset + 10,
+			}));
+		} catch (error) {
+			console.error("Ошибка получения рекомендаций:", error);
+		}
 	},
-	likeProfile: (id) =>
+
+	// Лайк профиля
+	likeProfile: async () => {
+		const { profiles, fetchRecommendations } = get();
+
+		if (profiles.length === 0) return;
+
+		const likedProfile = profiles[0];
+		try {
+			// Отправляем лайк на сервер
+			await api("likes", "POST", { liked_user_id: likedProfile.id });
+		} catch (error) {
+			console.error("Ошибка при отправке лайка:", error);
+		}
+
+		// Удаляем текущий профиль из списка и отмечаем как лайкнутый
 		set((state) => {
-			const updatedProfiles = state.profiles.map((profile) =>
-				profile.id === id ? { ...profile, liked: true } : profile
-			);
-			localStorage.setItem(
-				LOCAL_STORAGE_KEY,
-				JSON.stringify(updatedProfiles)
-			);
-			return { profiles: updatedProfiles };
-		}),
-	dislikeProfile: (id) =>
+			const updatedProfiles = [...state.profiles];
+			updatedProfiles.shift();
+
+			return {
+				profiles: updatedProfiles,
+			};
+		});
+
+		// Если профилей осталось мало, подгружаем новые
+		if (profiles.length < 5) {
+			await fetchRecommendations();
+		}
+	},
+
+	// Дизлайк профиля
+	dislikeProfile: () => {
 		set((state) => {
-			const updatedProfiles = state.profiles.map((profile) =>
-				profile.id === id ? { ...profile, liked: false } : profile
-			);
-			localStorage.setItem(
-				LOCAL_STORAGE_KEY,
-				JSON.stringify(updatedProfiles)
-			);
+			if (state.profiles.length === 0) return state;
+
+			const updatedProfiles = [...state.profiles];
+			updatedProfiles.shift();
+
 			return { profiles: updatedProfiles };
-		}),
+		});
+
+		if (get().profiles.length < 5) {
+			get().fetchRecommendations();
+		}
+	},
+
+	fetchLikedProfiles: async () => {
+		try {
+			const response = await api<{ likedMeUsers: Profile[] }>(
+				"likes",
+				"GET"
+			);
+			console.log(response.likedMeUsers)
+			set(() => ({
+				likedProfiles: [...response.likedMeUsers],
+			}));
+		} catch (error) {
+			console.error("Ошибка получения лайкнутых профилей:", error);
+		}
+	},
 }));

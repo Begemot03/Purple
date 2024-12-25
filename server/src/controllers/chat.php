@@ -6,15 +6,9 @@ use Flight;
 
 class ChatController {
     public static function getChats() {
-        if (empty($_SESSION['user']['id'])) {
-            Flight::json(['msg' => 'Unauthorized'], 401);
-            return;
-        }
-
-        $currentUserId = $_SESSION['user']['id'];
+        $currentUserId = UserController::authenticate();
         $db = Flight::get('db');
 
-        // Получение чатов пользователя
         $chats = $db->select('Chats', [
             '[>]User(user1)' => ['user1_id' => 'id'],
             '[>]User(user2)' => ['user2_id' => 'id']
@@ -36,14 +30,8 @@ class ChatController {
     }
 
     public static function sendMessage() {
+        $currentUserId = UserController::authenticate();
         $data = Flight::request()->data->getData();
-
-        if (empty($_SESSION['user']['id'])) {
-            Flight::json(['msg' => 'Unauthorized'], 401);
-            return;
-        }
-
-        $currentUserId = $_SESSION['user']['id'];
 
         if (empty($data['chat_id']) || empty($data['message'])) {
             Flight::json(['msg' => 'Chat ID and message are required'], 400);
@@ -51,8 +39,6 @@ class ChatController {
         }
 
         $db = Flight::get('db');
-
-        // Проверяем, существует ли чат
         $chat = $db->get('Chats', '*', ['id' => $data['chat_id']]);
 
         if (!$chat) {
@@ -60,10 +46,8 @@ class ChatController {
             return;
         }
 
-        // Определяем получателя
         $receiverId = $chat['user1_id'] === $currentUserId ? $chat['user2_id'] : $chat['user1_id'];
 
-        // Отправляем сообщение
         $db->insert('Messages', [
             'chat_id' => $data['chat_id'],
             'sender_id' => $currentUserId,
@@ -75,14 +59,8 @@ class ChatController {
     }
 
     public static function getMessages() {
+        $currentUserId = UserController::authenticate();
         $data = Flight::request()->query->getData();
-
-        if (empty($_SESSION['user']['id'])) {
-            Flight::json(['msg' => 'Unauthorized'], 401);
-            return;
-        }
-
-        $currentUserId = $_SESSION['user']['id'];
 
         if (empty($data['chat_id'])) {
             Flight::json(['msg' => 'Chat ID is required'], 400);
@@ -91,7 +69,6 @@ class ChatController {
 
         $db = Flight::get('db');
 
-        // Получаем сообщения
         $messages = $db->select('Messages', '*', [
             'chat_id' => $data['chat_id'],
             'OR' => [
@@ -105,14 +82,8 @@ class ChatController {
     }
 
     public static function getUnreceivedMessages() {
+        $currentUserId = UserController::authenticate();
         $data = Flight::request()->query->getData();
-
-        if (empty($_SESSION['user']['id'])) {
-            Flight::json(['msg' => 'Unauthorized'], 401);
-            return;
-        }
-
-        $currentUserId = $_SESSION['user']['id'];
 
         if (empty($data['chat_id'])) {
             Flight::json(['msg' => 'Chat ID is required'], 400);
@@ -121,14 +92,12 @@ class ChatController {
 
         $db = Flight::get('db');
 
-        // Получаем непрочитанные сообщения
         $messages = $db->select('Messages', '*', [
             'chat_id' => $data['chat_id'],
             'receiver_id' => $currentUserId,
             'received' => false
         ]);
 
-        // Помечаем сообщения как полученные
         $db->update('Messages', ['received' => true], [
             'chat_id' => $data['chat_id'],
             'receiver_id' => $currentUserId,

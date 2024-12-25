@@ -1,13 +1,24 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { PeopleList } from "./ui";
 import { useProfilesStore } from "@/entities/profile";
 
 export const PeoplePage: FC = () => {
-	const profiles = useProfilesStore((state) => state.profiles);
+	const likedMeProfiles = useProfilesStore((state) => state.likedProfiles);
+	const fetchLikedProfiles = useProfilesStore((state) => state.fetchLikedProfiles);
+
+	useEffect(() => {
+		fetchLikedProfiles();
+	}, [fetchLikedProfiles]);
+
+	console.log(likedMeProfiles)
 
 	return (
 		<div className="fullscreen">
-			<PeopleList people={profiles} />
+			{likedMeProfiles.length > 0 ? (
+				<PeopleList people={likedMeProfiles} />
+			) : (
+				<p>Ещё никто не поставил вам лайк.</p>
+			)}
 		</div>
 	);
 };

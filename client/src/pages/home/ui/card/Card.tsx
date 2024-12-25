@@ -19,7 +19,7 @@ export const Card: FC<CardProps> = ({
 	return (
 		<div className="card-fullscreen mouse-pressed__effect">
 			<div className="card-fullscreen__wrapper">
-				<CardImage src={imageSrc} />
+				<CardImage src={imageSrc == "" ? "https://placehold.jp/250x400.png" : imageSrc} />
 				<div className="card-fullscreen__content">
 					<CardDescription title={title} subtitle={subtitle} />
 					<CardActions onDislike={onDislike} onLike={onLike} />

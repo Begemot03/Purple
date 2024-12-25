@@ -18,9 +18,10 @@ import { PrivateRoute } from "./PrivateRoute";
 export const AppRouter: FC = () => {
 	const routers = createRoutesFromElements(
 		<>
-			<Route path="/login" element={<LoginPage />} />
-			<Route path="/register" element={<RegisterPage />} />
+			
 			<Route path="/" element={<Layout />}>
+				<Route path="/login" element={<LoginPage />} />
+				<Route path="/register" element={<RegisterPage />} />
 				<Route element={<PrivateRoute />}>
 					<Route index element={<HomePage />} />
 					<Route path="contact" element={<ContactPage />} />
